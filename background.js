@@ -1,25 +1,20 @@
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-        chrome.declarativeContent.onPageChanged.addRules([{
-            conditions: [
-                new chrome.declarativeContent.PageStateMatcher({
-                    pageUrl: {hostEquals: 'www.netflix.com'},
-                })
-            ],
-            actions: [new chrome.declarativeContent.ShowPageAction()]
-        }]);
-    });
-});
-
-chrome.action.onClicked.addListener((tab) => {
-    chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: fetchNetflixHistory,
-    });
-});
-
-function fetchNetflixHistory() {
-    chrome.tabs.executeScript({
-        code: 'fetchNetflixData();'
-    });
-}
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "fetchNetflixData") {
+      // Fetch the Netflix data here
+      const netflixData = request.data;
+  
+      // Send the data to your server
+      fetch('https://your-server.com/api/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(netflixData)
+      }).then(response => response.json())
+        .then(data => console.log(data))
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  });
+  
