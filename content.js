@@ -1,24 +1,29 @@
-// This function scrapes the Netflix viewing history from the webpage
-function scrapeNetflixData() {
-    // Your scraping code goes here
-    // This is just a placeholder
-    const netflixData = {
-      history: [
-        // Example data
-        { title: 'Example Show', season: 1, episode: 1, date: '2023-06-09' },
-        { title: 'Example Show', season: 1, episode: 2, date: '2023-06-10' }
-      ]
-    };
-  
-    return netflixData;
+// content.js
+
+// Function to click the "Show More" button
+function clickShowMore() {
+  const showMoreButton = document.querySelector('button[data-uia=""]');
+  if (showMoreButton) {
+      showMoreButton.click();
+      // Wait for the new items to load before clicking again
+      setTimeout(clickShowMore, 2000);
+  } else {
+      // If there's no "Show More" button, start scraping
+      scrapeViewingActivity();
   }
-  
-  // This function sends the scraped data to the background script
-  function sendNetflixData() {
-    const netflixData = scrapeNetflixData();
-    chrome.runtime.sendMessage({ action: "fetchNetflixData", data: netflixData });
+}
+
+// Function to scrape the viewing activity
+function scrapeViewingActivity() {
+  const viewingActivity = [];
+  const titleElements = document.querySelectorAll('.col.title');
+  for (const titleElement of titleElements) {
+      const title = titleElement.textContent.trim();
+      viewingActivity.push(title);
   }
-  
-  // Call the function when the content script is loaded
-  sendNetflixData();
-  
+  // Send the viewing activity to the background script
+  chrome.runtime.sendMessage({action: "viewingActivity", data: viewingActivity});
+}
+
+// Start the process
+clickShowMore();
