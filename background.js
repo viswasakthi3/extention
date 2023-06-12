@@ -1,10 +1,12 @@
-// background.js
-
-// Listen for messages from the content script
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.action === "viewingActivity") {
-      // The viewing activity data is in request.data
-      // You can send it to your server here
-      console.log(request.data);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "getNetflixData") {
+    // Send the data to a server
+    fetch('https://your-server.com/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request.data)
+    });
   }
 });

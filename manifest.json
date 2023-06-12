@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Netflix Watch History Fetcher",
+  "name": "Netflix History Fetcher",
   "version": "1.0",
   "permissions": ["activeTab", "scripting"],
   "action": {
@@ -13,11 +13,5 @@
   },
   "background": {
     "service_worker": "background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://www.netflix.com/viewingactivity*"],
-      "js": ["content.js"]
-    }
-  ]
+  }
 }
